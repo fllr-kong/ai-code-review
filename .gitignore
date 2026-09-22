@@ -1,28 +1,53 @@
-# ============ 密钥与环境变量（绝不上传） ============
+# ===== 密钥与环境配置（绝不入库）=====
 .env
-backend/.env
-*.env.local
+.env.local
+.env.*.local
 
-# ============ 数据库文件（含本地数据） ============
+# ===== 数据库文件（含用户数据）=====
 *.db
+*.sqlite
 *.sqlite3
+*.db-journal
+*.db-wal
+*.db-shm
 
-# ============ Python ============
+# ===== Python（后端）=====
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+*.egg-info/
 .venv/
 venv/
+env/
+ENV/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
-# ============ Node / 前端构建 ============
+# ===== Node / 前端构建产物 =====
 node_modules/
 dist/
+dist-ssr/
+*.local
+.vite/
 
-# ============ 与本项目无关的本地资料（不参与上传） ============
-代码理解小助手/
-学透指南与简历素材.html
+# ===== 日志与临时文件 =====
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# ============ 编辑器与系统文件 ============
-.vscode/
+# ===== IDE / 编辑器 =====
 .idea/
+*.swp
+*.swo
+
+# ===== 操作系统 =====
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# ===== 工具临时目录（不入库）=====
+.trae-html-share-packages/
+代码理解小助手/
+.trae/

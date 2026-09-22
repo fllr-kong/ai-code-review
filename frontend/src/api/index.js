@@ -70,6 +70,22 @@ export function deleteHistory(id) {
   return api.delete(`/history/${id}`)
 }
 
+export function getShareStatus(id) {
+  return api.get(`/history/${id}/share`)
+}
+
+export function createShare(id) {
+  return api.post(`/history/${id}/share`)
+}
+
+export function revokeShare(id) {
+  return api.delete(`/history/${id}/share`)
+}
+
+export function getSharedReview(code) {
+  return api.get(`/share/${code}`)
+}
+
 export function detectLanguage(code) {
   return api.post('/detect-language', { code })
 }

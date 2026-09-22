@@ -7,7 +7,8 @@ const routes = [
   { path: '/register', name: 'Register', component: () => import('../views/RegisterPage.vue') },
   { path: '/', name: 'Home', meta: { requiresAuth: true }, component: () => import('../views/HomePage.vue') },
   { path: '/history', name: 'History', meta: { requiresAuth: true }, component: () => import('../views/HistoryPage.vue') },
-  { path: '/history/:id', name: 'HistoryDetail', meta: { requiresAuth: true }, component: () => import('../views/HistoryDetail.vue') }
+  { path: '/history/:id', name: 'HistoryDetail', meta: { requiresAuth: true }, component: () => import('../views/HistoryDetail.vue') },
+  { path: '/share/:code', name: 'Share', component: () => import('../views/SharePage.vue') }
 ]
 
 const router = createRouter({
@@ -19,6 +20,9 @@ let authChecked = false
 const auth = useAuth()
 
 router.beforeEach(async (to) => {
+  // 公开分享页无需登录态，直接放行（未登录访问也不触发 /auth/me 请求）
+  if (to.name === 'Share') return true
+
   let loggedIn = Boolean(auth.user.value)
   if (!authChecked) {
     try {

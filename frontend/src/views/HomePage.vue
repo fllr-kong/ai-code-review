@@ -1,7 +1,18 @@
 <template>
   <div class="home-page">
-    <el-row :gutter="16">
-      <el-col :span="14">
+    <div class="page-hero">
+      <div class="hero-left">
+        <h1 class="page-title">代码审查</h1>
+        <p class="page-subtitle">将代码粘贴到左侧编辑器，AI 会自动检测语言并给出审查建议</p>
+      </div>
+      <div class="hero-badge">
+        <el-icon :size="16"><MagicStick /></el-icon>
+        <span>AI Powered</span>
+      </div>
+    </div>
+
+    <el-row :gutter="20" class="page-body">
+      <el-col :xs="24" :lg="14">
         <EditorPanel
           v-model="code"
           v-model:language="language"
@@ -9,7 +20,7 @@
           @submit="onSubmit"
         />
       </el-col>
-      <el-col :span="10">
+      <el-col :xs="24" :lg="10">
         <ResultPanel
           :result="result"
           @select-issue="onSelectIssue"
@@ -22,6 +33,7 @@
 <script setup>
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
+import { MagicStick } from '@element-plus/icons-vue'
 import EditorPanel from '../components/EditorPanel.vue'
 import ResultPanel from '../components/ResultPanel.vue'
 import { reviewCode } from '../api'
@@ -77,6 +89,69 @@ function onSelectIssue(issue) {
 
 <style scoped>
 .home-page {
-  height: calc(100vh - 60px);
+  height: calc(100vh - 64px);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 24px;
+  gap: 16px;
+}
+
+.page-hero {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.hero-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.page-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.3;
+}
+.page-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+.hero-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--brand-gradient-soft);
+  color: var(--brand-primary-dark);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.page-body {
+  flex: 1;
+  min-height: 0;
+  margin: 0 !important;
+}
+.page-body :deep(.el-col) {
+  height: 100%;
+}
+
+@media (max-width: 768px) {
+  .home-page {
+    height: auto;
+    min-height: calc(100vh - 64px);
+    padding: 16px;
+  }
+  .page-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
 }
 </style>

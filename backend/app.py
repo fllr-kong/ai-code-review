@@ -14,11 +14,13 @@ def create_app():
     from routes.history import history_bp
     from routes.language import language_bp
     from routes.auth import auth_bp
+    from routes.share import share_bp
 
     app.register_blueprint(auth_bp, url_prefix='/api')
     app.register_blueprint(review_bp, url_prefix='/api')
     app.register_blueprint(history_bp, url_prefix='/api')
     app.register_blueprint(language_bp, url_prefix='/api')
+    app.register_blueprint(share_bp, url_prefix='/api')
 
     os.makedirs(DB_PATH.parent, exist_ok=True)
     init_db()

@@ -2,7 +2,17 @@
   <div class="editor-panel">
     <div class="toolbar">
       <div class="toolbar-left">
-        <el-select :modelValue="language" placeholder="选择语言" style="width: 140px" @update:modelValue="onLanguageUpdate" @change="onLanguageChange">
+        <div class="toolbar-label">
+          <el-icon :size="16" color="var(--brand-primary)"><EditPen /></el-icon>
+          <span>代码编辑器</span>
+        </div>
+        <el-select
+          :modelValue="language"
+          placeholder="选择语言"
+          style="width: 140px"
+          @update:modelValue="onLanguageUpdate"
+          @change="onLanguageChange"
+        >
           <el-option label="自动检测" value="" />
           <el-option label="Python" value="python" />
           <el-option label="JavaScript" value="javascript" />
@@ -19,24 +29,29 @@
           <el-option label="JSON" value="json" />
           <el-option label="YAML" value="yaml" />
         </el-select>
-        <el-button :icon="Upload" @click="triggerUpload">上传文件</el-button>
+        <el-button :icon="Upload" @click="triggerUpload" round>上传文件</el-button>
         <input ref="fileInput" type="file" accept=".py,.js,.ts,.java,.cpp,.c,.html,.css,.vue,.go,.rs,.sql,.json,.yaml,.txt" hidden @change="onFileChange" />
       </div>
       <div class="toolbar-right">
-        <el-button type="primary" :icon="VideoPlay" :loading="loading" @click="$emit('submit')">
-          提交审查
+        <el-button type="primary" :icon="VideoPlay" :loading="loading" @click="$emit('submit')" size="large" round>
+          {{ loading ? '审查中...' : '提交审查' }}
         </el-button>
       </div>
     </div>
     <div ref="editorRef" class="editor-container"></div>
-    <div v-if="detecting" class="detecting-tip">正在检测语言...</div>
+    <transition name="fade">
+      <div v-if="detecting" class="detecting-tip">
+        <el-icon class="spin"><Loading /></el-icon>
+        正在检测语言...
+      </div>
+    </transition>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import * as monaco from 'monaco-editor'
-import { Upload, VideoPlay } from '@element-plus/icons-vue'
+import { Upload, VideoPlay, EditPen, Loading } from '@element-plus/icons-vue'
 import { detectLanguage } from '../api'
 
 const props = defineProps({
@@ -75,11 +90,19 @@ onMounted(() => {
     language: languageMap[props.language] || 'plaintext',
     theme: 'vs-dark',
     fontSize: 14,
+    fontFamily: "'Fira Code', 'Consolas', 'Monaco', monospace",
     minimap: { enabled: false },
     scrollBeyondLastLine: false,
     automaticLayout: true,
     tabSize: 4,
-    wordWrap: 'on'
+    wordWrap: 'on',
+    padding: { top: 12 },
+    lineNumbers: 'on',
+    roundedSelection: true,
+    scrollbar: {
+      verticalScrollbarSize: 6,
+      horizontalScrollbarSize: 6
+    }
   })
 
   editor.onDidChangeModelContent(() => {
@@ -151,36 +174,74 @@ defineExpose({ editor })
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
   overflow: hidden;
+  border: 1px solid var(--border-light);
 }
+
 .toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
-  border-bottom: 1px solid #ebeef5;
-  background: #fafbfc;
+  border-bottom: 1px solid var(--border-light);
+  background: var(--bg-subtle);
+  gap: 12px;
+  flex-wrap: wrap;
 }
 .toolbar-left {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
 }
+.toolbar-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-right: 4px;
+}
+
 .editor-container {
   flex: 1;
-  min-height: 350px;
+  min-height: 300px;
 }
+
 .detecting-tip {
   position: absolute;
-  top: 60px;
-  right: 20px;
-  background: #409EFF;
+  top: 64px;
+  right: 24px;
+  background: var(--brand-gradient);
   color: #fff;
-  padding: 6px 12px;
-  border-radius: 4px;
+  padding: 6px 14px;
+  border-radius: 20px;
   font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: var(--shadow-brand);
+  z-index: 10;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .toolbar {
+    padding: 10px 12px;
+  }
+  .toolbar-label {
+    display: none;
+  }
 }
 </style>
